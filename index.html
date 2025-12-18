@@ -117,4 +117,23 @@ async function sendToLINE() {
 </script>
 
 </body>
+  <button onclick="apply()">鑑定を申し込む</button>
+<script>
+async function apply() {
+  try {
+    await liff.init({ liffId: "2008723568-QahkEkHg" });
+
+    await liff.sendMessages([{
+      type: "text",
+      text: "【鑑定申込】\n親子占いの入力が完了しました！"
+    }]);
+
+    alert("メッセージを送信しました！");
+    liff.closeWindow();
+  } catch (err) {
+    alert("エラー：" + err);
+  }
+}
+</script>
+
 </html>
