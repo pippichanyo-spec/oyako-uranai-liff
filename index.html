@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>親子の仲良し占い</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+      background: linear-gradient(180deg, #5b3fa6, #c6b7e2);
+      color: #333;
+      padding: 16px;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      margin-top: 8px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .btn {
+      background: linear-gradient(90deg, #f5c542, #f0a500);
+      color: #5b3fa6;
+      font-weight: bold;
+      padding: 14px;
+      text-align: center;
+      border-radius: 24px;
+      margin-top: 24px;
+    }
+    .note {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🐣 親子の仲良し占い</h1>
+
+<div class="card">
+  <h3>🐥 親の情報</h3>
+  <label>生年月日</label>
+  <input id="parentBirth" placeholder="19820808" />
+
+  <label>性別</label>
+  <select id="parentGender">
+    <option>女性</option>
+    <option>男性</option>
+    <option>その他</option>
+  </select>
+
+  <label>血液型</label>
+  <select id="parentBlood">
+    <option>A</option>
+    <option>B</option>
+    <option>O</option>
+    <option>AB</option>
+    <option>不明</option>
+  </select>
+
+  <label>MBTI</label>
+  <input id="parentMBTI" placeholder="INFP" />
+  <div class="note">分からない方はこちら 👉 <a href="https://pippichanyo-spec.github.io/mbti/" target="_blank">MBTI診断</a></div>
+</div>
+
+<div class="card">
+  <h3>🐤 子どもの情報</h3>
+  <label>生年月日</label>
+  <input id="childBirth" placeholder="20150403" />
+
+  <label>性別</label>
+  <select id="childGender">
+    <option>女性</option>
+    <option>男性</option>
+    <option>その他</option>
+  </select>
+
+  <label>血液型</label>
+  <select id="childBlood">
+    <option>A</option>
+    <option>B</option>
+    <option>O</option>
+    <option>AB</option>
+    <option>不明</option>
+  </select>
+
+  <label>MBTI</label>
+  <input id="childMBTI" placeholder="ENFP" />
+</div>
+
+<div class="btn" onclick="sendToLINE()">🔮 鑑定を申し込む</div>
+
+<script>
+async function sendToLINE() {
+  await liff.init({ liffId: 'ここにLIFF_ID' });
+
+  const message = '鑑定を申し込む';
+  await liff.sendMessages([{ type: 'text', text: message }]);
+  liff.closeWindow();
+}
+</script>
+
+</body>
+</html>
