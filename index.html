@@ -6,134 +6,194 @@
   <title>親子の仲良し占い</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
+    :root {
+      --purple: #6b4bb6;
+      --light-purple: #efe9ff;
+      --gold: #c9a24d;
+      --card-bg: #ffffff;
+    }
     body {
-      font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
-      background: linear-gradient(180deg, #5b3fa6, #c6b7e2);
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(180deg, #5e3ea1, #7a5bd6);
       color: #333;
+    }
+    header {
+      padding: 20px;
+      color: #fff;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .container {
       padding: 16px;
     }
-    h1 {
-      text-align: center;
-      color: #fff;
-    }
     .card {
-      background: #fff;
+      background: var(--card-bg);
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 18px;
     }
     label {
       display: block;
-      margin-top: 8px;
-      font-weight: bold;
+      font-size: 13px;
+      margin-top: 10px;
     }
     input, select {
       width: 100%;
-      padding: 8px;
+      box-sizing: border-box;
+      padding: 10px;
       margin-top: 4px;
       border-radius: 8px;
       border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    .hint {
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    .hint a {
+      color: var(--purple);
+      text-decoration: underline;
     }
     .btn {
-      background: linear-gradient(90deg, #f5c542, #f0a500);
-      color: #5b3fa6;
-      font-weight: bold;
+      width: 100%;
       padding: 14px;
-      text-align: center;
-      border-radius: 24px;
-      margin-top: 24px;
+      margin-top: 20px;
+      border-radius: 999px;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      background: linear-gradient(90deg, var(--gold), #f0d98a);
+      color: #4b2f00;
     }
-    .note {
-      font-size: 12px;
-      margin-top: 4px;
+    .sub-btn {
+      margin-top: 10px;
+      background: var(--light-purple);
+      color: var(--purple);
+      border: 1px dashed var(--purple);
     }
+    .toggle {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+    .toggle button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--purple);
+      background: #fff;
+      color: var(--purple);
+    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
+  <header>🐣 親子の仲良し占い</header>
+  <div class="container">
 
-<h1>🐣 親子の仲良し占い</h1>
+    <div class="card" id="parentCard">
+      <h2>🐔 親の情報</h2>
+      <label>ニックネーム</label>
+      <input id="parentName" />
 
-<div class="card">
-  <h3>🐥 親の情報</h3>
-  <label>生年月日</label>
-  <input id="parentBirth" placeholder="19820808" />
+      <label>生年月日</label>
+      <input id="parentBirth" />
 
-  <label>性別</label>
-  <select id="parentGender">
-    <option>女性</option>
-    <option>男性</option>
-    <option>その他</option>
-  </select>
+      <label>性別</label>
+      <select id="parentGender"><option>女性</option><option>男性</option><option>その他</option></select>
 
-  <label>血液型</label>
-  <select id="parentBlood">
-    <option>A</option>
-    <option>B</option>
-    <option>O</option>
-    <option>AB</option>
-    <option>不明</option>
-  </select>
+      <label>血液型</label>
+      <select id="parentBlood"><option>A</option><option>B</option><option>O</option><option>AB</option><option>不明</option></select>
 
-  <label>MBTI</label>
-  <input id="parentMBTI" placeholder="INFP" />
-  <div class="note">分からない方はこちら 👉 <a href="https://pippichanyo-spec.github.io/mbti/" target="_blank">MBTI診断</a></div>
-</div>
+      <label>MBTI</label>
+      <input id="parentMBTI" />
+      <div class="hint">分からない方はこちら 👉 <a href="https://pippichanyo-spec.github.io/mbti/" target="_blank">MBTI診断</a></div>
+    </div>
 
-<div class="card">
-  <h3>🐤 子どもの情報</h3>
-  <label>生年月日</label>
-  <input id="childBirth" placeholder="20150403" />
+    <div id="childrenArea"></div>
+    <button class="btn sub-btn" onclick="addChild()">➕ 子どもを追加する</button>
 
-  <label>性別</label>
-  <select id="childGender">
-    <option>女性</option>
-    <option>男性</option>
-    <option>その他</option>
-  </select>
+    <div class="card">
+      <h2>🐔 パートナー</h2>
+      <div class="toggle">
+        <button onclick="showPartner(true)">追加する</button>
+        <button onclick="showPartner(false)">追加しない</button>
+      </div>
+      <div id="partnerArea" class="hidden">
+        <label>ニックネーム</label>
+        <input id="partnerName" />
+        <label>生年月日</label>
+        <input id="partnerBirth" />
+        <label>性別</label>
+        <select id="partnerGender"><option>女性</option><option>男性</option><option>その他</option></select>
+        <label>血液型</label>
+        <select id="partnerBlood"><option>A</option><option>B</option><option>O</option><option>AB</option><option>不明</option></select>
+        <label>MBTI</label>
+        <input id="partnerMBTI" />
+      </div>
+    </div>
 
-  <label>血液型</label>
-  <select id="childBlood">
-    <option>A</option>
-    <option>B</option>
-    <option>O</option>
-    <option>AB</option>
-    <option>不明</option>
-  </select>
+    <button class="btn" onclick="submitForm()">🔮 鑑定を申し込む</button>
 
-  <label>MBTI</label>
-  <input id="childMBTI" placeholder="ENFP" />
-</div>
-
-<div class="btn" onclick="sendToLINE()">🔮 鑑定を申し込む</div>
+  </div>
 
 <script>
-async function sendToLINE() {
-  await liff.init({ liffId: '2008723568-QahkEkHg' });
+  const LIFF_ID = "YOUR_LIFF_ID_HERE";
+  let childCount = 0;
 
-  const message = '鑑定を申し込む';
-  await liff.sendMessages([{ type: 'text', text: message }]);
-  liff.closeWindow();
-}
-</script>
+  window.onload = async () => {
+    await liff.init({ liffId: LIFF_ID });
+    addChild();
+  };
 
-</body>
-  <button onclick="apply()">鑑定を申し込む</button>
-<script>
-async function apply() {
-  try {
-    await liff.init({ liffId: "2008723568-QahkEkHg" });
-
-    await liff.sendMessages([{
-      type: "text",
-      text: "【鑑定申込】\n親子占いの入力が完了しました！"
-    }]);
-
-    alert("メッセージを送信しました！");
-    liff.closeWindow();
-  } catch (err) {
-    alert("エラー：" + err);
+  function addChild() {
+    childCount++;
+    const area = document.getElementById('childrenArea');
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <h2>🐤 子ども${childCount}</h2>
+      <label>ニックネーム</label><input class="c-name" />
+      <label>生年月日</label><input class="c-birth" />
+      <label>性別</label><select class="c-gender"><option>女性</option><option>男性</option><option>その他</option></select>
+      <label>血液型</label><select class="c-blood"><option>A</option><option>B</option><option>O</option><option>AB</option><option>不明</option></select>
+      <label>MBTI</label><input class="c-mbti" />
+    `;
+    area.appendChild(div);
   }
-}
-</script>
 
+  function showPartner(show) {
+    document.getElementById('partnerArea').classList.toggle('hidden', !show);
+  }
+
+  async function submitForm() {
+    let msg = `【親】\nニックネーム：${parentName.value}\n生年月日：${parentBirth.value}\n性別：${parentGender.value}\n血液型：${parentBlood.value}\nMBTI：${parentMBTI.value}\n\n`;
+
+    document.querySelectorAll('#childrenArea .card').forEach((c, i) => {
+      msg += `【子ども${i+1}】\n`;
+      msg += `ニックネーム：${c.querySelector('.c-name').value}\n`;
+      msg += `生年月日：${c.querySelector('.c-birth').value}\n`;
+      msg += `性別：${c.querySelector('.c-gender').value}\n`;
+      msg += `血液型：${c.querySelector('.c-blood').value}\n`;
+      msg += `MBTI：${c.querySelector('.c-mbti').value}\n\n`;
+    });
+
+    if (!document.getElementById('partnerArea').classList.contains('hidden')) {
+      msg += `【パートナー】\nニックネーム：${partnerName.value}\n生年月日：${partnerBirth.value}\n性別：${partnerGender.value}\n血液型：${partnerBlood.value}\nMBTI：${partnerMBTI.value}\n\n`;
+    }
+
+    msg += '鑑定を申し込みました🐣✨';
+
+    await liff.sendMessages([{ type: 'text', text: msg }]);
+    liff.closeWindow();
+  }
+</script>
+</body>
 </html>
